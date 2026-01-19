@@ -142,7 +142,7 @@ pnpm install
 
 在项目根目录创建 `.env` 文件配置环境变量：
 
-```env
+```bash
 # API 基础地址
 VITE_API_BASE_URL=http://localhost:8001
 

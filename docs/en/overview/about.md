@@ -27,7 +27,7 @@ If you have any questions or suggestions about the project, please contact us th
 - **Official Account**: FastApiAdmin
 - **Technical Exchange Group**: Please scan the QR code below to join
 
-  ![WeChat Group](/wechat.jpg)
+  ![WeChat Group](/group.jpg)
 
 ## 🤝Contribution Guide
 
@@ -238,7 +238,7 @@ If you have any questions, suggestions, or would like to contribute to the proje
 - **Email**: 948080782@qq.com
 - **WeChat**: Scan the QR code to join the technical exchange group
 
-  ![WeChat Group](/wechat.jpg)
+  ![WeChat Group](/group.jpg)
 
 We look forward to your feedback and contributions!
 

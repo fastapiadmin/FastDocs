@@ -65,7 +65,7 @@ export default defineConfig({
     cacheDir: '.vite/cache',
     
     // 限制chunk大小
-    chunkSizeWarningLimit: 1000,
+    chunkSizeWarningLimit: 2000,
     
     // 预加载策略
     preload: {

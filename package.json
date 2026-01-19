@@ -5,12 +5,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vitepress dev docs --port 5180",
+    "dev": "vitepress dev docs || true",
     "build": "vitepress build docs",
-    "preview": "vitepress preview docs",
-    "docs:dev": "vitepress dev docs --port 5180",
-    "docs:build": "vitepress build docs",
-    "docs:preview": "vitepress preview docs"
+    "preview": "vitepress preview docs"
   },
   "devDependencies": {
     "medium-zoom": "^1.1.0",

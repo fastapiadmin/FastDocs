@@ -10,7 +10,9 @@ export default defineConfig({
     description: '现代、开源、全栈融合的中后台快速开发平台',
     ignoreDeadLinks: [
         'http://localhost:8000/docs',
-        'http://localhost:5173'
+        'http://localhost:5173',
+        'http://localhost:8001/api/v1/docs',
+        'http://localhost:8001/api/v1/redoc'
     ],
     head: [
         ["link",{rel: "apple-touch-icon", sizes: "180x180", href: "/favicon.png"}],

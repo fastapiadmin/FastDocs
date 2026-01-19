@@ -791,7 +791,7 @@ pnpm run build:mp-alipay
 
 在部署 FastApp 之前，需要确保 API 地址配置正确：
 
-```env
+```bash
 # FastApp/.env.production
 # API 基础地址
 VITE_API_BASE_URL=https://service.fastapiadmin.com
