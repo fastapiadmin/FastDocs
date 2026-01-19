@@ -5,7 +5,7 @@ export default defineConfig({
     base: '/',
     srcDir: '.',
     outDir: '../dist',
-    lang: 'zh-CN',
+    // lang: 'zh-CN',
     title: 'FastApiAdmin',
     description: '现代、开源、全栈融合的中后台快速开发平台',
     ignoreDeadLinks: [
@@ -36,15 +36,14 @@ export default defineConfig({
     locales: {
         root: {
             label: '简体中文',
-            lang: 'zh-CN',
-            description: '现代、开源、全栈融合的中后台快速开发平台',
-            // link: '/zh/'
+            lang: 'zh',
+            description: '现代、开源、全栈融合的中后台快速开发平台'
         },
         en: {
             label: 'English',
             lang: 'en',
-            description: 'Modern, open-source, full-stack integrated backend rapid development platform',
-            link: '/en/'
+            link: '/en',
+            description: 'Modern, open-source, full-stack integrated backend rapid development platform'
         },
     },
     lastUpdated: true,
