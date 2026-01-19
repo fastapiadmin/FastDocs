@@ -1241,6 +1241,682 @@ pnpm run lint:format
 pnpm run clean:cache
 ```
 
+## 🎯 Vue 3 Composition API 最佳实践
+
+### 1. 组合式函数设计
+
+```typescript
+// src/composables/useCounter.ts
+export function useCounter(initialValue = 0) {
+  const count = ref(initialValue)
+  const doubleCount = computed(() => count.value * 2)
+  
+  const increment = () => count.value++
+  const decrement = () => count.value--
+  const reset = () => count.value = initialValue
+  
+  return {
+    count,
+    doubleCount,
+    increment,
+    decrement,
+    reset
+  }
+}
+
+// 使用示例
+const { count, doubleCount, increment, decrement, reset } = useCounter(10)
+```
+
+### 2. 响应式数据管理
+
+```typescript
+// 推荐的响应式数据管理方式
+const state = reactive({
+  user: null,
+  loading: false,
+  error: null
+})
+
+// 对于复杂计算
+const userDisplayName = computed(() => {
+  if (!state.user) return 'Guest'
+  return `${state.user.firstName} ${state.user.lastName}`
+})
+
+// 对于需要解构的响应式数据
+import { toRefs } from 'vue'
+const { user, loading, error } = toRefs(state)
+```
+
+### 3. 生命周期管理
+
+```typescript
+import { onMounted, onUnmounted, onBeforeUnmount, onUpdated, onErrorCaptured } from 'vue'
+
+onMounted(() => {
+  console.log('组件挂载完成')
+  // 初始化数据、添加事件监听器等
+})
+
+onBeforeUnmount(() => {
+  console.log('组件即将卸载')
+  // 清理资源、移除事件监听器等
+})
+
+onUnmounted(() => {
+  console.log('组件已卸载')
+  // 最终清理工作
+})
+
+onUpdated(() => {
+  console.log('组件已更新')
+  // 响应更新后的逻辑
+})
+
+onErrorCaptured((error, instance, info) => {
+  console.error('捕获到错误:', error, info)
+  // 错误处理逻辑
+  return true // 阻止错误继续传播
+})
+```
+
+## 📝 TypeScript 使用技巧
+
+### 1. 类型定义最佳实践
+
+```typescript
+// src/types/user.ts
+export interface User {
+  id: number
+  username: string
+  email: string
+  avatar?: string
+  roles: string[]
+  status: 'active' | 'inactive'
+  createdAt: string
+  updatedAt: string
+}
+
+// 使用类型守卫
+export function isUser(obj: any): obj is User {
+  return (
+    typeof obj === 'object' &&
+    obj !== null &&
+    typeof obj.id === 'number' &&
+    typeof obj.username === 'string' &&
+    typeof obj.email === 'string' &&
+    Array.isArray(obj.roles)
+  )
+}
+```
+
+### 2. 泛型使用
+
+```typescript
+// src/utils/request.ts
+export async function request<T = any>(
+  url: string,
+  options?: RequestInit
+): Promise<T> {
+  const response = await fetch(url, options)
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`)
+  }
+  return response.json()
+}
+
+// 使用示例
+interface UserListResponse {
+  data: User[]
+  total: number
+  page: number
+  size: number
+}
+
+const users = await request<UserListResponse>('/api/users')
+```
+
+### 3. 模块增强
+
+```typescript
+// src/types/vue-router.d.ts
+import 'vue-router'
+
+declare module 'vue-router' {
+  interface RouteMeta {
+    title?: string
+    icon?: string
+    roles?: string[]
+    keepAlive?: boolean
+    hidden?: boolean
+  }
+}
+
+// 使用增强的类型
+const routes = [
+  {
+    path: '/user',
+    component: UserPage,
+    meta: {
+      title: '用户管理',
+      icon: 'User',
+      roles: ['admin'],
+      keepAlive: true
+    }
+  }
+]
+```
+
+## ⚡ 性能优化
+
+### 1. 组件优化
+
+```vue
+<template>
+  <!-- 使用 v-memo 缓存渲染结果 -->
+  <div v-memo="[item.id, item.name]">
+    {{ item.name }}
+  </div>
+  
+  <!-- 使用 v-once 只渲染一次 -->
+  <div v-once>
+    {{ staticContent }}
+  </div>
+  
+  <!-- 使用 v-show 替代 v-if 用于频繁切换的元素 -->
+  <div v-show="isVisible">
+    {{ dynamicContent }}
+  </div>
+</template>
+
+<script setup lang="ts">
+// 使用 defineAsyncComponent 懒加载组件
+import { defineAsyncComponent } from 'vue'
+const HeavyComponent = defineAsyncComponent(() => import('./HeavyComponent.vue'))
+
+// 使用 shallowRef 处理大型对象
+const largeObject = shallowRef({ /* 大型对象 */ })
+
+// 使用 markRaw 处理不需要响应式的对象
+const nonReactiveObject = markRaw({ /* 不需要响应式的对象 */ })
+</script>
+```
+
+### 2. 路由优化
+
+```typescript
+// src/router/index.ts
+// 路由懒加载
+const Dashboard = () => import('@/views/dashboard/index.vue')
+const UserManagement = () => import('@/views/system/user/index.vue')
+const RoleManagement = () => import('@/views/system/role/index.vue')
+
+// 路由分割
+const routes = [
+  {
+    path: '/dashboard',
+    component: Dashboard
+  },
+  {
+    path: '/system',
+    children: [
+      {
+        path: 'user',
+        component: UserManagement
+      },
+      {
+        path: 'role',
+        component: RoleManagement
+      }
+    ]
+  }
+]
+```
+
+### 3. 网络优化
+
+```typescript
+// src/utils/request.ts
+// 请求防抖
+function debounce<T extends (...args: any[]) => any>(
+  func: T,
+  wait: number
+): (...args: Parameters<T>) => void {
+  let timeout: ReturnType<typeof setTimeout> | null = null
+  return (...args: Parameters<T>) => {
+    if (timeout) clearTimeout(timeout)
+    timeout = setTimeout(() => func(...args), wait)
+  }
+}
+
+// 批量请求
+async function batchRequest<T>(requests: Array<Promise<T>>): Promise<T[]> {
+  return Promise.all(requests)
+}
+
+// 缓存请求结果
+const cache = new Map<string, any>()
+async function cachedRequest<T>(url: string): Promise<T> {
+  if (cache.has(url)) {
+    return cache.get(url)
+  }
+  const result = await fetch(url).then(res => res.json())
+  cache.set(url, result)
+  return result
+}
+```
+
+## 🧪 测试
+
+### 1. 单元测试
+
+```typescript
+// src/utils/__tests__/dateUtil.test.ts
+import { formatDate, getRelativeTime } from '../dateUtil'
+
+describe('dateUtil', () => {
+  test('formatDate should format date correctly', () => {
+    const date = '2023-01-01T00:00:00Z'
+    expect(formatDate(date)).toBe('2023-01-01 00:00:00')
+    expect(formatDate(date, 'YYYY-MM-DD')).toBe('2023-01-01')
+  })
+  
+  test('getRelativeTime should return relative time', () => {
+    const date = new Date(Date.now() - 60000).toISOString() // 1 minute ago
+    expect(getRelativeTime(date)).toBe('1 minute ago')
+  })
+})
+```
+
+### 2. 组件测试
+
+```typescript
+// src/components/__tests__/Button.test.ts
+import { mount } from '@vue/test-utils'
+import Button from '../Button/index.vue'
+
+describe('Button', () => {
+  test('should render correctly', () => {
+    const wrapper = mount(Button, {
+      props: {
+        type: 'primary'
+      },
+      slots: {
+        default: 'Click me'
+      }
+    })
+    expect(wrapper.text()).toBe('Click me')
+    expect(wrapper.classes()).toContain('el-button--primary')
+  })
+  
+  test('should emit click event', async () => {
+    const wrapper = mount(Button)
+    await wrapper.trigger('click')
+    expect(wrapper.emitted('click')).toBeTruthy()
+  })
+})
+```
+
+## 🚀 CI/CD 配置
+
+### 1. GitHub Actions 配置
+
+```yaml
+# .github/workflows/ci.yml
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: 'pnpm'
+      - name: Install dependencies
+        run: pnpm install
+      - name: Run lint
+        run: pnpm run lint
+      - name: Run type check
+        run: pnpm run type-check
+      - name: Run tests
+        run: pnpm run test
+  
+  build:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: 'pnpm'
+      - name: Install dependencies
+        run: pnpm install
+      - name: Build
+        run: pnpm run build
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: dist
+          path: dist
+```
+
+### 2. 部署配置
+
+```yaml
+# .github/workflows/deploy.yml
+name: Deploy
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: 'pnpm'
+      - name: Install dependencies
+        run: pnpm install
+      - name: Build
+        run: pnpm run build
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+```
+
+## 📚 代码规范
+
+### 1. ESLint 配置
+
+```typescript
+// eslint.config.ts
+import { defineConfig } from 'eslint'
+import vue from '@eslint/js'
+import prettier from 'eslint-plugin-prettier'
+
+export default defineConfig({
+  extends: [
+    'eslint:recommended',
+    'plugin:vue/vue3-recommended',
+    'plugin:@typescript-eslint/recommended'
+  ],
+  plugins: {
+    prettier
+  },
+  rules: {
+    'prettier/prettier': 'error',
+    'vue/multi-word-component-names': 'off',
+    '@typescript-eslint/no-explicit-any': 'warn'
+  }
+})
+```
+
+### 2. Prettier 配置
+
+```yaml
+# .prettierrc.yaml
+trailingComma: 'es5'
+tabWidth: 2
+semi: true
+singleQuote: true
+printWidth: 80
+bracketSpacing: true
+bracketSameLine: false
+arrowParens: 'always'
+```
+
+## 🎨 设计系统
+
+### 1. 主题配置
+
+```typescript
+// src/styles/theme/index.ts
+export const lightTheme = {
+  colors: {
+    primary: '#409EFF',
+    secondary: '#67C23A',
+    success: '#67C23A',
+    warning: '#E6A23C',
+    danger: '#F56C6C',
+    info: '#909399',
+    background: '#F5F7FA',
+    text: '#303133'
+  },
+  spacing: {
+    xs: '4px',
+    sm: '8px',
+    md: '16px',
+    lg: '24px',
+    xl: '32px'
+  },
+  borderRadius: {
+    sm: '2px',
+    md: '4px',
+    lg: '8px'
+  }
+}
+
+export const darkTheme = {
+  colors: {
+    primary: '#66D9EF',
+    secondary: '#A6E22E',
+    success: '#A6E22E',
+    warning: '#FD971F',
+    danger: '#F92672',
+    info: '#8884d8',
+    background: '#1E1E1E',
+    text: '#D4D4D4'
+  },
+  spacing: {
+    xs: '4px',
+    sm: '8px',
+    md: '16px',
+    lg: '24px',
+    xl: '32px'
+  },
+  borderRadius: {
+    sm: '2px',
+    md: '4px',
+    lg: '8px'
+  }
+}
+```
+
+### 2. 组件设计规范
+
+```typescript
+// src/components/Button/index.vue
+<template>
+  <button
+    :class="[
+      'btn',
+      `btn--${type}`,
+      `btn--${size}`,
+      { 'btn--loading': loading }
+    ]"
+    :disabled="disabled || loading"
+    @click="$emit('click')"
+  >
+    <span v-if="loading" class="btn__loading"></span>
+    <slot></slot>
+  </button>
+</template>
+
+<script setup lang="ts">
+defineOptions({
+  name: 'AppButton' // 组件名称使用 PascalCase
+})
+
+interface Props {
+  type?: 'primary' | 'secondary' | 'success' | 'warning' | 'danger'
+  size?: 'small' | 'medium' | 'large'
+  disabled?: boolean
+  loading?: boolean
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  type: 'primary',
+  size: 'medium',
+  disabled: false,
+  loading: false
+})
+
+defineEmits<{
+  click: []
+}>()
+</script>
+
+<style scoped lang="scss">
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  &--primary {
+    background-color: var(--primary-color);
+    color: white;
+  }
+  
+  &--small {
+    padding: 4px 12px;
+    font-size: 12px;
+  }
+  
+  &--large {
+    padding: 12px 24px;
+    font-size: 16px;
+  }
+  
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  
+  &__loading {
+    // 加载动画样式
+  }
+}
+</style>
+```
+
+## 📝 项目配置管理
+
+### 1. 环境变量管理
+
+```typescript
+// src/config/index.ts
+import { loadEnv } from 'vite'
+
+const env = loadEnv(import.meta.env.MODE, process.cwd())
+
+export const config = {
+  env: env.VITE_APP_ENV || 'development',
+  api: {
+    baseURL: env.VITE_APP_API_BASE_URL || 'http://localhost:8000',
+    timeout: Number(env.VITE_APP_API_TIMEOUT) || 10000
+  },
+  app: {
+    title: env.VITE_APP_TITLE || 'FastApiAdmin',
+    version: env.VITE_APP_VERSION || '1.0.0'
+  },
+  features: {
+    enableAnalytics: env.VITE_ENABLE_ANALYTICS === 'true',
+    enableErrorTracking: env.VITE_ENABLE_ERROR_TRACKING === 'true'
+  }
+}
+```
+
+### 2. 全局配置
+
+```typescript
+// src/plugins/config.ts
+import { App } from 'vue'
+import { config } from '@/config'
+
+export function setupConfig(app: App) {
+  // 全局注入配置
+  app.config.globalProperties.$config = config
+  
+  // 提供全局配置访问
+  app.provide('config', config)
+}
+
+// 使用示例
+import { inject } from 'vue'
+const config = inject('config')
+console.log('API Base URL:', config.api.baseURL)
+```
+
+## 🎯 开发工具推荐
+
+### 1. VS Code 插件
+
+- **Volar**: Vue 3 官方推荐的 VS Code 扩展
+- **TypeScript Vue Plugin (Volar)**: 为 Vue 文件提供 TypeScript 支持
+- **ESLint**: 代码质量检查
+- **Prettier - Code formatter**: 代码格式化
+- **UnoCSS**: UnoCSS 工具类支持
+- **GitLens**: Git 增强工具
+- **Error Lens**: 内联错误提示
+- **Code Spell Checker**: 代码拼写检查
+
+### 2. 浏览器扩展
+
+- **Vue DevTools**: Vue 开发者工具
+- **Redux DevTools**: 状态管理调试工具
+- **JSON Viewer**: JSON 格式化工具
+- **Postman**: API 测试工具
+- **Lighthouse**: 性能分析工具
+
+## 📚 学习资源
+
+### 官方文档
+
+- [Vue 3 官方文档](https://v3.vuejs.org/)
+- [TypeScript 官方文档](https://www.typescriptlang.org/docs/)
+- [Vite 官方文档](https://vitejs.dev/)
+- [Element Plus 官方文档](https://element-plus.org/)
+- [Pinia 官方文档](https://pinia.vuejs.org/)
+- [Vue Router 官方文档](https://router.vuejs.org/)
+
+### 推荐教程
+
+- [Vue Mastery](https://www.vuemastery.com/)
+- [Vue School](https://vueschool.io/)
+- [TypeScript Handbook](https://www.typescriptlang.org/docs/handbook/intro.html)
+- [Frontend Masters](https://frontendmasters.com/)
+
+### 社区资源
+
+- [Vue Land](https://vue.land/): Vue 社区资源聚合
+- [Vue Use](https://vueuse.org/): Vue Composition API 实用工具集
+- [Awesome Vue](https://github.com/vuejs/awesome-vue): Vue 生态系统精选资源
+- [TypeScript Playground](https://www.typescriptlang.org/playground): TypeScript 在线编辑器
+
+通过本文档的指导，相信你已经掌握了 FastApiAdmin 前端项目的核心技术和最佳实践。在实际开发中，你可以根据具体需求灵活运用这些知识，构建高质量的前端应用。
+
 ### 项目启动步骤
 
 1. **克隆项目**
@@ -1283,10 +1959,6 @@ pnpm run clean:cache
 + **组件动态加载**：按需加载页面组件
 + **菜单结构自由**：支持多级菜单、目录、按钮、外链
 + **热更新生效**：添加菜单后立即生效
-
-#### 🔄 工作原理
-
-![业务流程](/guide_front_flow.png)
 
 ### 动态路由流程详解
 
@@ -1361,8 +2033,6 @@ normalizedRoute.component =
 1. 登录系统后，进入 **系统管理 → 菜单管理**
 2. 点击 **新增** 按钮
 
-![菜单引导](/guide_front_menu_op1.png)
-
 #### 步骤2：创建目录菜单
 
 如果需要先创建父级目录：
@@ -1379,8 +2049,6 @@ normalizedRoute.component =
   "状态": "启用"
 }
 ```
-
-![菜单引导](/guide_front_menu_op2.png)
 
 #### 步骤3：创建页面菜单
 
@@ -1399,8 +2067,6 @@ normalizedRoute.component =
   "状态": "启用"
 }
 ```
-
-![菜单引导](/guide_front_menu_op3.png)
 
 #### 步骤4：创建页面组件
 

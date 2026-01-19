@@ -19,15 +19,15 @@ title: 快速开始
 | 类型     | 技术栈     | 版本       |
 |----------|------------|------------|
 | 后端     | Python         | >=3.10       |
-| 后端     | FastAPI        | 0.109      |
+| 后端     | FastAPI        | 0.109+      |
 | 前端     | Node.js        | >= 20.0（推荐使用最新版）|
-| 前端     | npm            | 16.14      |
-| 前端     | Vue3           | 3.3        |
-| Web UI  | ElementPlus     | 2.10.4        |
-| 移动端  | Uni App         | 3.0.0       |
-| App UI  | Wot Design Uni  | 1.9.1        |
-| 数据库   | MySQL           | 8.0 （推荐使用最新版）|
-| 中间件   | Redis           | 7.0 （推荐使用最新版）|
+| 前端     | pnpm           | >= 9.0      |
+| 前端     | Vue3           | 3.5.22+     |
+| Web UI  | ElementPlus     | 2.10.4+        |
+| 移动端  | Uni App         | 3.0.0+       |
+| App UI  | Wot Design Uni  | 1.9.1+        |
+| 数据库   | MySQL           | 8.0+ （推荐使用最新版）|
+| 中间件   | Redis           | 7.0+ （推荐使用最新版）|
 
 ### 环境准备
 
@@ -63,6 +63,9 @@ sudo apt install nodejs npm
 
 # CentOS/RHEL
 sudo dnf install nodejs npm
+
+# 安装 pnpm
+npm install -g pnpm
 ```
 
 #### 3. 安装数据库和缓存
@@ -94,10 +97,18 @@ sudo systemctl start redis
 # 克隆代码到本地
 # FastapiAdmin 主工程
 git clone https://github.com/fastapiadmin/FastapiAdmin.git
+# 或使用 Gitee
+git clone https://gitee.com/fastapiadmin/FastapiAdmin.git
+
 # FastApp 移动端
 git clone https://github.com/fastapiadmin/FastApp.git
+# 或使用 Gitee
+git clone https://gitee.com/fastapiadmin/FastApp.git
+
 # FastDocs 官网文档
 git clone https://github.com/fastapiadmin/FastDocs.git
+# 或使用 Gitee
+git clone https://gitee.com/fastapiadmin/FastDocs.git
 ```
 
 ### 本地后端启动（FastapiAdmin 主工程）
@@ -112,12 +123,23 @@ cd FastapiAdmin/backend
 cp env/.env.dev.example env/.env.dev
 
 # 编辑环境配置文件（根据实际情况修改）
-# 主要配置项：数据库连接、Redis连接、JWT密钥等
+# 主要配置项说明：
+# - DATABASE_URL: 数据库连接地址
+# - REDIS_URL: Redis连接地址
+# - SECRET_KEY: JWT签名密钥
+# - ACCESS_TOKEN_EXPIRE_MINUTES: 访问令牌过期时间
+# - REFRESH_TOKEN_EXPIRE_DAYS: 刷新令牌过期时间
+# - API_PREFIX: API前缀
+# - CORS_ORIGINS: 跨域来源
 ```
 
 #### 2. 安装依赖
 
 ```sh
+# 使用 uv 管理项目（推荐）
+uv add -r requirements.txt
+
+# 或使用传统 pip 方式
 # 创建虚拟环境（可选但推荐）
 python3 -m venv venv
 
@@ -147,6 +169,10 @@ python main.py init
 #### 4. 启动后端服务
 
 ```sh
+# 使用 uv 启动
+uv run main.py run
+
+# 或使用传统方式
 # 开发环境启动
 python main.py run --env=dev
 
@@ -169,15 +195,16 @@ cd FastapiAdmin/frontend
 cp .env.development.example .env.development
 
 # 编辑环境配置文件（根据实际情况修改）
-# 主要配置项：API基础URL等
+# 主要配置项说明：
+# - VITE_API_BASE_URL: 后端API基础地址
+# - VITE_APP_BASE_API: API前缀
+# - VITE_APP_TITLE: 应用标题
+# - VITE_APP_VERSION: 应用版本
 ```
 
 #### 2. 安装依赖
 
 ```sh
-# 安装 pnpm（如果未安装）
-npm install -g pnpm
-
 # 安装前端依赖
 pnpm install
 ```
@@ -192,39 +219,79 @@ pnpm run dev
 pnpm run build
 ```
 
-### 本地小程序h5启动（FastApp 移动端）
+### 本地移动端启动（FastApp 移动端）
 
-#### 1. 配置环境变量
+#### 1. 环境要求
+
+- **Node.js** >= 22
+- **pnpm** >= 9
+
+#### 2. 配置环境变量
 
 ```sh
 # 进入移动端工程目录
 cd FastApp
 
 # 复制环境配置文件
-cp .env.development .env.development
+cp .env.development.example .env.development
+cp .env.production.example .env.production
 
 # 编辑环境配置文件（根据实际情况修改）
-# 主要配置项：API基础URL等
+# 主要配置项说明：
+# - VITE_APP_ENV: 环境模式
+# - VITE_APP_TITLE: 应用标题
+# - VITE_API_BASE_URL: 后端API基础地址
+# - VITE_APP_BASE_API: API前缀（/api/v1）
+# - VITE_APP_PORT: 开发服务器端口
+# - VITE_TIMEOUT: 请求超时时间
+# - VITE_APP_WS_ENDPOINT: WebSocket服务器地址
 ```
 
-#### 2. 安装依赖
+#### 3. 安装依赖
 
 ```sh
+# 进入移动端工程目录
+cd FastApp
+
 # 安装前端依赖
 pnpm install
 ```
 
-#### 3. 启动H5服务
+#### 4. 启动开发服务器
 
-```sh
-# 启动H5开发服务
+##### H5 开发
+
+```bash
+# 启动 H5 开发服务器
 pnpm run dev:h5
 
-# 构建H5版本, 生成 `dist/build/h5` 目录
-pnpm run build:h5
+# 访问地址
+# http://localhost:5180/app
+```
 
-# 启动其他平台（如微信小程序）
+##### 微信小程序开发
+
+```bash
+# 启动微信小程序开发服务器
 pnpm run dev:mp-weixin
+
+# 在微信开发者工具中导入项目目录：FastApp/dist/dev/mp-weixin
+```
+
+##### 其他平台开发
+
+```bash
+# 启动支付宝小程序开发服务器
+pnpm run dev:mp-alipay
+
+# 启动百度小程序开发服务器
+pnpm run dev:mp-baidu
+
+# 启动字节跳动小程序开发服务器
+pnpm run dev:mp-toutiao
+
+# 启动 QQ 小程序开发服务器
+pnpm run dev:mp-qq
 ```
 
 ### 本地项目官网启动（FastDocs 官网文档）
@@ -250,7 +317,7 @@ pnpm run docs:build
 - FastDocs 文档地址: <http://127.0.0.1:5180>
 - FastapiAdmin 前端地址: <http://127.0.0.1:5173>
 - FastAPI 接口文档: <http://127.0.0.1:8001/api/v1/docs>
-- FastApp H5地址: <http://127.0.0.1:5174>
+- FastApp H5地址: <http://127.0.0.1:5180/app>
 
 ### 默认账号密码
 
@@ -278,10 +345,10 @@ cp frontend/.env.production.example frontend/.env.production
 # 主要配置项：数据库连接、Redis连接、JWT密钥、API基础URL等
 
 # 赋予脚本执行权限
-chmod +x start.sh
+chmod +x deploy.sh
 
 # 执行部署脚本
-./start.sh
+./deploy.sh
 
 # 查看部署状态
 docker compose ps
@@ -327,64 +394,72 @@ docker exec -it <容器名> bash
 
 | 模块名 <div style="width:60px"/>  | 截图 |
 |----------|------|
-| 登录      | ![登录](/login.png) |
 | 仪表盘    | ![仪表盘](/dashboard.png) |
-| 分析页    | ![分析页](/analysis.png) |
-| 菜单管理  | ![菜单管理](/menu.png) |
-| 部门管理  | ![部门管理](/dept.png) |
-| 岗位管理  | ![岗位管理](/position.png) |
-| 角色管理  | ![角色管理](/role.png) |
-| 用户管理  | ![用户管理](/user.png) |
-| 日志管理  | ![日志管理](/log.png) |
-| 配置管理  | ![配置管理](/config.png) |
-| 在线用户  | ![在线用户](/online.png) |
-| 服务器监控 | ![服务器监控](/service.png) |
-| 缓存监控  | ![缓存监控](/cache.png) |
-| 任务管理  | ![任务管理](/job.png) |
-| 字典管理  | ![字典管理](/dict.png) |
-| 接口管理  | ![接口管理](/docs.png) |
-| 系统主题  | ![系统主题](/theme.png) |
-| 在线文档  | ![在线文档](/help.png) |
-| 系统锁屏  | ![系统锁屏](/lock.png) |
-| 表单构建  | ![表单构建](/form.png) |
 | 代码生成  | ![代码生成](/gencode.png) |
-| 流程管理  | ![流程管理](/workflow.png) |
-| 文件管理  | ![文件管理](/file.png) |
-| 我的应用  | ![我的应用](/myapp.png) |
-| 配置中心  | ![配置中心](/setting.png) |
 | 智能助手  | ![智能助手](/ai.png) |
 
 ### 移动端
 
-| 模块 <div style="width:60px"/> | 详情 | 模块 <div style="width:60px"/> | 详情 | 模块 <div style="width:60px"/> | 详情 |
-|----------|------|----------|------|----------|------|
-| 登录    | ![移动端登录](/app_login.png) | 首页      | ![移动端首页](/app_home.png) | 我的      | ![移动端个人中心](/app_mine.png) |
-| 个人  | ![移动端个人信息](/app_profile.png) | 设置   | ![移动端设置](/app_setting.png) | 工作台      | ![移动端工作台](/app_work.png) |
+| 登录 <div style="width:60px"/> | 首页 <div style="width:60px"/> | 个人中心 <div style="width:60px"/> |
+|----------|----------|----------|
+| ![移动端登录](/app_login.png) | ![移动端首页](/app_home.png) | ![移动端个人中心](/app_mine.png) |
 
 ## 🚀二开教程
 
 ### 后端部分（FastapiAdmin 主工程）
 
-1. **编写实体类层**：在 `FastapiAdmin/backend/app/api/v1/models/demo/example_model.py` 中创建 example 的 ORM 模型（对应 Spring Boot 中的实体类层）
-2. **编写数据模型层**：在 `FastapiAdmin/backend/app/api/v1/schemas/demo/example_schema.py` 中创建 example 数据模型（对应 Spring Boot 中的 DTO 层）
-3. **编写查询参数模型层**：在 `FastapiAdmin/backend/app/api/v1/params/demo/example_param.py` 中创建 example 的查询参数模型（对应 Spring Boot 中的 DTO 层）
-4. **编写持久化层**：在 `FastapiAdmin/backend/app/api/v1/cruds/demo/example_crud.py` 中创建 example 数据层（对应 Spring Boot 中的 Mapper 或 DAO 层）
-5. **编写业务层**：在 `FastapiAdmin/backend/app/api/v1/services/demo/example_service.py` 中创建 example 数据层（对应 Spring Boot 中的 Service 层）
-6. **编写接口层**：在 `FastapiAdmin/backend/app/api/v1/controllers/demo/example_controller.py` 中创建 example 数据层（对应 Spring Boot 中的 Controller 层）
-7. **注册后端路由**：在 `FastapiAdmin/backend/app/api/v1/urls/demo/example_url.py` 中注册 example 路由
-8. **注册路由到 FastAPI 服务中**：在 `FastapiAdmin/backend/plugin/init_app.py` 中注册路由
-9. **将 demo 模块添加至系统初始化脚本**：在 `FastapiAdmin/backend/app/scripts/initialize.py` 中添加（如果需要可以把 demo 的菜单权限，配置到 `FastapiAdmin/backend/app/scripts/data/system_menu.json` 和 `FastapiAdmin/backend/app/scripts/data/system_role_menus.json` 或从前端页面菜单中新增）
-10. **将 demo 模块添加至数据库迁移脚本中**：在 `FastapiAdmin/backend/app/alembic/env.py` 中添加
+项目采用**插件化架构设计**，二次开发建议在 `backend/app/plugin` 目录下进行，系统会**自动发现并注册**所有符合规范的路由，便于模块管理和升级维护。
+
+#### 插件化架构特性
+
+- **自动路由发现**：系统会自动扫描 `backend/app/plugin/` 目录下所有 `controller.py` 文件
+- **自动路由注册**：所有路由会被自动注册到对应的前缀路径 (module_xxx -> /xxx)
+- **模块化管理**：按功能模块组织代码，便于维护和扩展
+- **支持多层级嵌套**：支持模块内部多层级嵌套结构
+
+#### 插件目录结构
+
+```sh
+backend/app/plugin/
+├── module_application/  # 应用模块（自动映射为 /application）
+│   └── ai/              # AI子模块
+│       ├── controller.py # 控制器文件
+│       ├── model.py      # 数据模型文件
+│       ├── schema.py     # 数据验证文件
+│       ├── service.py    # 业务逻辑文件
+│       └── crud.py       # 数据访问文件
+├── module_example/      # 示例模块（自动映射为 /example）
+│   └── demo/            # 子模块
+│       ├── controller.py # 控制器文件
+│       ├── model.py      # 数据模型文件
+│       ├── schema.py     # 数据验证文件
+│       ├── service.py    # 业务逻辑文件
+│       └── crud.py       # 数据访问文件
+├── module_generator/    # 代码生成模块（自动映射为 /generator）
+└── init_app.py          # 插件初始化文件
+```
+
+#### 二次开发步骤
+
+1. **创建插件模块**：在 `backend/app/plugin/` 目录下创建新的模块目录，如 `module_yourfeature`
+2. **编写数据模型**：在 `model.py` 中定义数据库模型
+3. **编写数据验证**：在 `schema.py` 中定义数据验证模型
+4. **编写数据访问层**：在 `crud.py` 中编写数据库操作逻辑
+5. **编写业务逻辑层**：在 `service.py` 中编写业务逻辑
+6. **编写控制器**：在 `controller.py` 中定义路由和处理函数
+7. **自动注册**：系统会自动扫描并注册所有路由，无需手动配置
 
 ### 前端部分（FastapiAdmin 主工程）
 
-1. **前端接入后端接口地址**：在 `FastapiAdmin/frontend/src/api/demo/example.ts` 中配置
-2. **编写前端页面**：在 `FastapiAdmin/frontend/src/views/demo/example/index.vue` 中编写
+1. **配置前端API**：在 `frontend/src/api/` 目录下创建对应的API文件
+2. **编写页面组件**：在 `frontend/src/views/` 目录下创建页面组件
+3. **注册路由**：在 `frontend/src/router/index.ts` 中注册路由
 
 ### 移动端部分（FastApp 移动端）
 
-1. **移动端接入后端接口地址**：在 `FastApp/src/api` 中编写
-2. **编写移动端页面**：在 `FastApp/src/pages` 中编写
+1. **配置移动端API**：在 `FastApp/src/api/` 目录下创建对应的API文件
+2. **编写移动端页面**：在 `FastApp/src/pages/` 目录下创建页面组件
+3. **配置页面路由**：在 `FastApp/src/pages.json` 中配置页面路由
 
 ## 💡常见问题及解决方案
 
@@ -407,7 +482,15 @@ docker exec -it <容器名> bash
 **问题**：API请求失败
 **解决方案**：检查前端环境配置文件中的API基础URL是否正确，确保后端服务正在运行。
 
-### 3. 部署问题
+### 3. 移动端启动失败
+
+**问题**：依赖安装失败
+**解决方案**：确保Node.js版本正确（>=22.0），pnpm版本正确（>=9.0），可以尝试清除缓存后重新安装：`pnpm cache clean && pnpm install`。
+
+**问题**：H5页面空白
+**解决方案**：检查浏览器控制台是否有错误信息，确保API基础URL配置正确，后端服务正在运行。
+
+### 4. 部署问题
 
 **问题**：Docker部署失败
 **解决方案**：确保服务器已安装Docker和Docker Compose，检查端口是否被占用，查看容器日志了解具体错误信息。
@@ -415,10 +498,13 @@ docker exec -it <容器名> bash
 **问题**：Nginx配置错误
 **解决方案**：检查Nginx配置文件中的反向代理设置是否正确，确保后端服务地址配置正确。
 
-### 4. 其他问题
+### 5. 其他问题
 
 **问题**：系统初始化失败
 **解决方案**：确保数据库已正确初始化，且迁移已应用，可以尝试重新执行初始化命令：`python main.py init`。
 
 **问题**：权限不足
 **解决方案**：检查用户角色权限设置，确保当前用户有足够的权限访问所需功能。
+
+**问题**：代码生成失败
+**解决方案**：确保数据库表结构正确，代码生成配置参数填写完整。

@@ -51,54 +51,51 @@ export default defineConfig({
     themeConfig: {
         logo: '/logo.png',
         nav: [
-            { text: '首页', link: '/' },
-            { 
-                text: '指南', 
-                items: [
-                    { text: '项目概述', link: '/overview/overview' },
-                    { text: '快速开始', link: '/quickstart/start' },
-                    { text: '为什么选择FastapiAdmin?', link: '/overview/why' }
-                ] 
-            },
-            { 
-                text: '开发指南', 
-                items: [
-                    { text: '前端开发', link: '/development/frontend' },
-                    { text: '后端开发', link: '/development/backend' },
-                    { text: '小程序开发', link: '/development/miniprogram' }
-                ] 
-            },
-            { 
-                text: '部署指南', 
-                items: [
-                    { text: 'Docker部署', link: '/quickstart/deployment' }
-                ] 
-            },
-            { 
-                text: 'API文档', 
-                items: [
-                    { text: '后端API', link: 'https://service.fastapiadmin.com/api/v1/docs', target: '_blank' },
-                    { text: '前端API', link: '/development/frontend#api-调用', target: '_blank' }
-                ] 
-            },
-            { 
-                text: '版本', 
-                items: [
-                { text: 'master', link: 'https://github.com/fastapiadmin/FastapiAdmin', target: '_blank' },
-                { text: 'V2.0.0', link: 'https://github.com/fastapiadmin/FastapiAdmin/tree/v2.0.0', target: '_blank' },
-                { text: 'V1.0.0', link: 'https://github.com/fastapiadmin/FastapiAdmin/tree/v1.0.0', target: '_blank' }
-                ]
-            },
-            { 
-                text: '资源', 
-                items: [
-                    { text: 'GitHub', link: 'https://github.com/fastapiadmin', target: '_blank' },
-                    { text: 'Gitee', link: 'https://gitee.com/fastapiadmin', target: '_blank' },
-                    { text: '在线演示', link: 'https://service.fastapiadmin.com/web', target: '_blank' }
-                ] 
-            },
-            { text: '关于我们', link: '/overview/about' },
-        ],
+                { text: '首页', link: '/' },
+                { 
+                    text: '指南', 
+                    items: [
+                        { text: '项目概述', link: '/overview/overview' },
+                        { text: '快速开始', link: '/quickstart/start' },
+                        { text: '为什么选择FastapiAdmin?', link: '/overview/why' }
+                    ] 
+                },
+                { 
+                    text: '开发指南', 
+                    items: [
+                        { text: '前端开发', link: '/development/frontend' },
+                        { text: '后端开发', link: '/development/backend' },
+                        { text: '移动端开发', link: '/development/miniprogram' },
+                        { text: '开发规范', link: '/development/guidelines' }
+                    ] 
+                },
+                { 
+                    text: '部署与API', 
+                    items: [
+                        { text: '部署指南', link: '/quickstart/deployment' },
+                        { text: 'API文档说明', link: '/quickstart/api-docs' },
+                        { text: '后端API', link: 'https://service.fastapiadmin.com/api/v1/docs', target: '_blank' }
+                    ] 
+                },
+                { 
+                    text: '资源', 
+                    items: [
+                        { text: 'GitHub', link: 'https://github.com/fastapiadmin', target: '_blank' },
+                        { text: 'Gitee', link: 'https://gitee.com/fastapiadmin', target: '_blank' },
+                        { text: '在线演示', link: 'https://service.fastapiadmin.com/web', target: '_blank' },
+                        { text: '移动端演示', link: 'https://service.fastapiadmin.com/app', target: '_blank' },
+                        { 
+                            text: '版本', 
+                            items: [
+                                { text: 'master', link: 'https://github.com/fastapiadmin/FastapiAdmin', target: '_blank' },
+                                { text: 'V2.0.0', link: 'https://github.com/fastapiadmin/FastapiAdmin/tree/v2.0.0', target: '_blank' },
+                                { text: 'V1.0.0', link: 'https://github.com/fastapiadmin/FastapiAdmin/tree/v1.0.0', target: '_blank' }
+                            ]
+                        }
+                    ] 
+                },
+                { text: '关于我们', link: '/overview/about' },
+            ],
         sidebar: [
             {
                 text: '简介',
@@ -115,38 +112,25 @@ export default defineConfig({
                 items: [
                     { text: '前端开发指南', link: '/development/frontend' },
                     { text: '后端开发指南', link: '/development/backend' },
-                    { text: '小程序开发指南', link: '/development/miniprogram' }
+                    { text: '移动端开发指南', link: '/development/miniprogram' },
+                    { text: '开发规范', link: '/development/guidelines' }
                 ]
             },
             {
-                text: '部署指南',
+                text: '部署与API',
                 collapsed: false,
                 items: [
-                    { text: 'Docker部署', link: '/quickstart/deployment' }
-                ]
-            },
-            {
-                text: 'API文档',
-                collapsed: false,
-                items: [
+                    { text: '部署指南', link: '/quickstart/deployment' },
+                    { text: 'API文档说明', link: '/quickstart/api-docs' },
                     { text: '后端API', link: 'https://service.fastapiadmin.com/api/v1/docs', target: '_blank' },
                     { text: '前端API调用', link: '/development/frontend#api-调用' },
                     { text: '移动端API调用', link: '/development/miniprogram#api-调用' }
                 ]
             },
             {
-                text: '资源',
-                collapsed: false,
+                text: '关于',
                 items: [
-                    { text: 'GitHub', link: 'https://github.com/fastapiadmin', target: '_blank' },
-                    { text: 'Gitee', link: 'https://gitee.com/fastapiadmin', target: '_blank' },
-                    { text: '在线演示', link: 'https://service.fastapiadmin.com/web', target: '_blank' }
-                ]
-            },
-            {
-                text: '关于我们',
-                items: [
-                    { text: '联系我们', link: '/overview/about' }
+                    { text: '关于我们', link: '/overview/about' }
                 ]
             }
         ],

@@ -6,7 +6,7 @@ title: Project Overview
 
 ## 📋FastApiAdmin Introduction
 
-**Fastapi-Vue3-Admin** is a **completely open-source, highly modular, and technologically advanced modern rapid development platform** designed to help developers efficiently build high-quality enterprise-level backend systems.
+**FastApiAdmin** is a **completely open-source, highly modular, and technologically advanced modern rapid development platform** designed to help developers efficiently build high-quality enterprise-level backend systems. The project adopts a **frontend-backend separation architecture**, integrating the Python backend framework `FastAPI` and the mainstream frontend framework `Vue3` to achieve multi-end unified development, providing a one-stop out-of-the-box development experience.
 
 ### Core Values
 
@@ -32,91 +32,229 @@ title: Project Overview
 - **API Management Platforms**: Interface management, documentation management and other systems
 - **Multi-platform Applications**: Application scenarios that require both Web and mobile terminals
 
-## 📁Project Structure
+## 📦Project Structure Overview
 
-### FastapiAdmin Main Project
+The project has been split into three independent repositories for separate development and maintenance:
 
-- **Backend**: Python + FastAPI + SQLAlchemy + Redis + MySQL
-- **Frontend**: Vue3 + TypeScript + ElementPlus + Pinia + Axios
-- **DevOps**: Docker + Docker Compose + Nginx
+### 1. FastapiAdmin Main Project
 
-### FastApp Mobile Application
+```sh
+FastapiAdmin/
+├─ backend/              # Backend project
+│  ├─ app/              # Core application code
+│  │  ├─ api/           # API interfaces
+│  │  │  └─ v1/         # API version
+│  │  │     ├─ module_common/    # Common module
+│  │  │     ├─ module_monitor/   # Monitoring module
+│  │  │     └─ module_system/    # System module
+│  │  ├─ common/        # Common code
+│  │  ├─ config/        # Configuration management
+│  │  ├─ core/          # Core functionality
+│  │  ├─ plugin/        # Plugin system
+│  │  │  ├─ module_application/  # Application module
+│  │  │  ├─ module_example/      # Example module
+│  │  │  └─ module_generator/    # Code generation module
+│  │  ├─ scripts/       # Script tools
+│  │  └─ utils/         # Utility functions
+│  ├─ alembic/          # Database migration
+│  ├─ env/              # Environment configuration
+│  ├─ static/           # Static resources
+│  ├─ tests/            # Test code
+│  ├─ README.md         # Backend documentation
+│  ├─ main.py           # Backend entry
+│  └─ requirements.txt  # Python dependencies
+├─ frontend/            # Frontend project
+│  ├─ src/              # Source code
+│  │  ├─ api/           # API interfaces
+│  │  ├─ assets/        # Resource files
+│  │  ├─ components/    # Components
+│  │  ├─ composables/   # Composables
+│  │  ├─ constants/     # Constants
+│  │  ├─ directives/    # Directives
+│  │  ├─ enums/         # Enums
+│  │  ├─ lang/          # Internationalization
+│  │  ├─ layouts/       # Layouts
+│  │  ├─ plugins/       # Plugins
+│  │  ├─ router/        # Router
+│  │  ├─ store/         # State management
+│  │  ├─ styles/        # Styles
+│  │  ├─ types/         # Type definitions
+│  │  ├─ utils/         # Utility functions
+│  │  └─ views/         # Pages
+│  ├─ public/           # Static resources
+│  ├─ package.json      # Frontend dependencies
+│  └─ README.md         # Frontend documentation
+├─ devops/              # DevOps project
+│  ├─ backend/          # Backend deployment configuration
+│  ├─ nginx/            # Nginx configuration
+│  └─ redis/            # Redis configuration
+├─ docker-compose.yaml  # Deployment file
+├─ deploy.sh            # Deployment script
+├─ LICENSE              # License
+└─ README.md            # Project documentation
+```
 
-- **Framework**: Uni App
-- **UI Library**: Wot Design Uni
-- **Language**: Vue3 + TypeScript
-- **Platforms**: WeChat Mini Program, Alipay Mini Program, Web H5, iOS, Android
+### 2. FastApp Mobile Application
 
-### FastDocs Official Documentation
+```sh
+FastApp/
+├─ src/                 # Source code directory
+│  ├─ api/             # API interfaces
+│  │  ├─ auth.ts       # Authentication interfaces
+│  │  ├─ file.ts       # File interfaces
+│  │  └─ user.ts       # User interfaces
+│  ├─ components/      # Components
+│  │  ├─ cu-date-query/ # Date query component
+│  │  ├─ cu-picker/     # Picker component
+│  │  ├─ qiun-error/    # Error component
+│  │  └─ qiun-loading/  # Loading component
+│  ├─ composables/     # Composables
+│  │  ├─ useNavigationBar.ts # Navigation bar management
+│  │  ├─ useStomp.ts   # WebSocket management
+│  │  └─ useTabbar.ts  # Tabbar management
+│  ├─ constants/       # Constants
+│  │  ├─ index.ts      # Constants definition
+│  │  └─ storage.constant.ts # Storage keys
+│  ├─ enums/           # Enums
+│  │  ├─ api-code.enum.ts # API error codes
+│  │  └─ api-header.enum.ts # API headers
+│  ├─ layouts/         # Layout components
+│  │  ├─ default.vue   # Default layout
+│  │  └─ tabbar.vue    # Tabbar layout
+│  ├─ pages/           # Page files
+│  │  ├─ index/        # Home page
+│  │  │  ├─ data.ts     # Data definition
+│  │  │  ├─ index.vue   # Home page component
+│  │  │  └─ types.ts    # Type definitions
+│  │  ├─ login/        # Login page
+│  │  │  └─ index.vue   # Login component
+│  │  ├─ mine/         # Personal center
+│  │  │  ├─ about/      # About page
+│  │  │  ├─ faq/        # FAQ page
+│  │  │  ├─ feedback/   # Feedback page
+│  │  │  ├─ profile/    # Profile page
+│  │  │  ├─ settings/   # Settings page
+│  │  │  └─ index.vue   # Personal center component
+│  │  └─ work/         # Workbench
+│  │     ├─ data.ts     # Data definition
+│  │     ├─ index.vue   # Workbench component
+│  │     └─ types.ts    # Type definitions
+│  ├─ router/          # Router configuration
+│  │  └─ index.ts      # Router configuration file
+│  ├─ static/          # Static resources
+│  │  ├─ icons/        # Icons
+│  │  ├─ images/       # Images
+│  │  └─ logo.png      # Logo
+│  ├─ store/           # State management
+│  │  ├─ modules/      # Modules
+│  │  │  ├─ theme.store.ts # Theme management
+│  │  │  └─ user.store.ts # User management
+│  │  └─ index.ts      # State management configuration
+│  ├─ styles/          # Style files
+│  │  └─ index.scss    # Global styles
+│  ├─ types/           # TypeScript definitions
+│  ├─ utils/           # Utility functions
+│  │  ├─ auth.ts       # Authentication utility
+│  │  ├─ color.ts      # Color utility
+│  │  ├─ index.ts      # Utility functions
+│  │  ├─ request.ts    # Request utility
+│  │  └─ storage.ts    # Storage utility
+│  ├─ App.vue          # Application root component
+│  ├─ main.ts          # Application entry file
+│  ├─ manifest.json    # Application configuration file
+│  ├─ pages.json       # Page router configuration
+│  └─ theme.json       # Theme configuration
+├─ public/             # Static resources
+├─ .env.development    # Development environment configuration
+├─ .env.production     # Production environment configuration
+├─ package.json        # Project dependencies
+├─ pages.config.ts     # Page configuration
+├─ tsconfig.json       # TypeScript configuration
+├─ unocss.config.ts    # UnoCSS configuration
+└─ vite.config.ts      # Vite configuration
+```
 
-- **Framework**: VitePress
-- **Language**: Markdown
-- **Features**: Multi-language support, responsive design, search functionality
+### 3. FastDocs Official Documentation
 
-## 🚀Core Features
+```sh
+FastDocs/
+├─ docs/               # Documentation source
+│  ├─ development/     # Development documentation
+│  ├─ en/              # English documentation
+│  ├─ overview/        # Overview documentation
+│  ├─ quickstart/      # Quick start
+│  ├─ public/          # Static resources
+│  └─ index.md         # Home page
+├─ .vitepress/         # VitePress configuration
+│  ├─ theme/           # Theme configuration
+│  └─ config.ts        # Site configuration
+├─ package.json        # Project dependencies
+└─ README.md           # Project documentation
+```
 
-### System Management
+## ✨Core Highlights
 
-- **User Management**: Supports multi-role user management, permission assignment, and user status control
-- **Role Management**: Fine-grained permission control based on RBAC model
-- **Menu Management**: Dynamic menu configuration, support for multi-level menus
-- **Department Management**: Organizational structure management, support for multi-level departments
-- **Position Management**: Job position management, associated with departments
-
-### Monitoring Management
-
-- **Server Monitoring**: Real-time monitoring of server CPU, memory, disk, network and other indicators
-- **Cache Monitoring**: Redis cache usage monitoring and management
-- **Online Users**: Real-time display of online user information and login status
-- **Log Management**: Operation logs, login logs, system logs recording and querying
-
-### Public Management
-
-- **Configuration Management**: System configuration items management, support for dynamic modification
-- **Dictionary Management**: System dictionary data management, support for multi-level dictionaries
-- **Task Management**: Scheduled task configuration, execution status monitoring
-- **File Management**: File upload, download, preview and management
-- **Notice Management**: System announcement release and management
-
-### Development Tools
-
-- **Code Generation**: Automatic generation of backend CRUD code and frontend page code
-- **Form Building**: Visual form design and generation
-- **Interface Management**: API documentation automatically generated by FastAPI
-- **Workflow Management**: Visual workflow design and execution
-- **Intelligent Assistant**: AI-assisted development and system operation
-
-### Mobile Application (FastApp)
-
-- **Unified Login**: Support for multiple login methods
-- **Personal Center**: Personal information management, avatar upload, etc.
-- **Workbench**: Quick access to commonly used functions
-- **Message Push**: Real-time message notification
-- **Multi-platform Adaptation**: Support for WeChat Mini Program, H5, iOS, Android
+| Feature | Description |
+| ---- | ---- |
+| 🔭 Rapid Development | A completely open-source modern rapid development platform designed to help developers efficiently build high-quality enterprise-level backend systems. |
+| 🌐 Full-Stack Integration | Frontend-backend separation, integrating Python (FastAPI) + Vue3 multi-end development, supporting Web and mobile terminals. |
+| 🧱 Modular Design | System functions are highly decoupled, plugin-based architecture, supporting automatic route discovery and registration, easy to extend and maintain. |
+| ⚡️ High Performance | Using FastAPI asynchronous framework + Redis cache to optimize interface response speed. |
+| 🔒 Secure Authentication | Support for JWT OAuth2 authentication mechanism to ensure system security. |
+| 📊 Permission Management | RBAC model implements fine-grained permission control at the menu, button, and data levels. |
+| 🚀 Quick Deployment | Support for Docker/Docker Compose/Nginx one-click deployment. |
+| 📄 Developer-Friendly | Provide comprehensive Chinese documentation + Chinese interface + visual toolchain, reducing learning costs. |
+| 🧩 Quick Integration | Based on Vue3, Vite5, Pinia, ElementPlus and other mainstream frontend technology stacks, out-of-the-box. |
+| 📱 Mobile Support | FastApp mobile application developed based on UniApp, supporting multi-end operation (H5, WeChat Mini Program, Alipay Mini Program, App, etc.). |
+| 🤖 Agent Framework | Integrated agent framework, providing AI capabilities. |
+| 🎨 Theme Customization | Support for dark/light theme switching, providing personalized interface experience. |
+| 🌍 Internationalization Support | Built-in internationalization framework, supporting multi-language switching. |
+| 📈 Data Visualization | Integrated chart library, providing rich data visualization capabilities. |
+| 🛠️ Code Generation | Built-in code generation tool, improving development efficiency. |
 
 ## 🔧Technology Stack
 
-| Category | Technology | Version | Description |
-|---------|------------|---------|-------------|
-| **Backend** | Python | >=3.10 | Programming language |
-| **Backend** | FastAPI | 0.109.0 | Asynchronous web framework |
-| **Backend** | SQLAlchemy | 2.0.23 | ORM framework |
-| **Backend** | Redis | 4.5.4 | Cache database |
-| **Backend** | MySQL | 8.0+ | Relational database |
-| **Backend** | MongoDB | 7.0+ | NoSQL database (optional) |
-| **Backend** | JWT | 2.6.0 | Authentication |
-| **Frontend** | Vue | 3.3.4 | Frontend framework |
-| **Frontend** | TypeScript | 5.1.6 | Static type checking |
-| **Frontend** | ElementPlus | 2.3.12 | UI component library |
-| **Frontend** | Pinia | 2.1.6 | State management |
-| **Frontend** | Axios | 1.6.2 | HTTP client |
-| **Frontend** | Vue Router | 4.2.5 | Routing |
-| **Mobile** | Uni App | 3.0.0 | Cross-platform framework |
-| **Mobile** | Wot Design Uni | 1.9.1 | Mobile UI library |
-| **DevOps** | Docker | 20.10+ | Containerization |
-| **DevOps** | Docker Compose | 2.20+ | Container orchestration |
-| **DevOps** | Nginx | 1.25+ | Reverse proxy |
-| **Documentation** | VitePress | 1.0.0+ | Documentation site generator |
+| Category | Technology | Description |
+|---------|------------|-------------|
+| **Backend Framework** | FastAPI / Uvicorn / Pydantic 2.0 / Alembic | Modern, high-performance asynchronous framework with enforced type constraints and data migration |
+| **ORM** | SQLAlchemy 2.0 | Powerful ORM library |
+| **Scheduled Tasks** | APScheduler | Easily implement scheduled tasks |
+| **Authentication** | PyJWT | Implement JWT authentication |
+| **Frontend Framework** | Vue3 / Vite5 / Pinia / TypeScript | Rapidly develop Vue3 applications |
+| **Frontend Tools** | ESLint / Prettier / Stylelint | Code quality and style tools |
+| **Mobile Framework** | UniApp / Vue3 / TypeScript | Cross-platform mobile application development |
+| **UI Library** | ElementPlus (Web) / Wot Design Uni (Mobile) | Enterprise-level UI component library |
+| **CSS Framework** | UnoCSS / SCSS | Atomic CSS and preprocessor |
+| **Database** | MySQL / PostgreSQL / SQLite | Relational database support |
+| **Cache** | Redis | Powerful cache database |
+| **API Documentation** | Swagger / Redoc | Automatically generate API documentation |
+| **Deployment** | Docker / Nginx / Docker Compose | Rapid project deployment |
+| **Monitoring** | Built-in Server Monitoring / Cache Monitoring | System operation status monitoring |
+| **Internationalization** | i18n | Multi-language support |
+| **Data Visualization** | ECharts | Rich data visualization capabilities |
+
+## ✨Built-in Modules
+
+### FastapiAdmin Main Project Modules
+
+| Module Name | Submodules | Description |
+|---------|------------|-------------|
+| **Dashboard** | Workbench, Analysis Page | System overview and data analysis |
+| **System Management** | User, Role, Menu, Department, Position, Dictionary, Configuration, Announcement | Core system management functions |
+| **Monitoring Management** | Online Users, Server Monitoring, Cache Monitoring | System operation status monitoring |
+| **Task Management** | Scheduled Tasks | Asynchronous task scheduling management |
+| **Log Management** | Operation Logs | User behavior auditing |
+| **Development Tools** | Code Generation, Form Builder, API Documentation | Tools to improve development efficiency |
+
+### FastApp Mobile Application Modules
+
+| Module Name | Submodules | Description |
+|---------|------------|-------------|
+| **Home** | Carousel, Quick Navigation, Announcements, Data Statistics | Mobile home page display |
+| **Workbench** | Business function entry, supports permission control | Mobile core function area |
+| **Personal Center** | Personal Information, Settings, FAQ, Feedback | User personal related functions |
+| **User Authentication** | Login, Registration, Password Reset | User identity verification |
+| **Data Statistics** | Real-time visitor count, page views and other data display | Business data visualization |
 
 ## 📞Contact Information
 

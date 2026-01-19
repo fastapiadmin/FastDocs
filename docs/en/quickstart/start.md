@@ -327,39 +327,15 @@ docker exec -it <container name> bash
 
 | Module Name <div style="width:60px"/> | Screenshot |
 |-------------|------------|
-| Login | ![Login](/login.png) |
 | Dashboard | ![Dashboard](/dashboard.png) |
-| Analysis Page | ![Analysis Page](/analysis.png) |
-| Menu Management | ![Menu Management](/menu.png) |
-| Department Management | ![Department Management](/dept.png) |
-| Position Management | ![Position Management](/position.png) |
-| Role Management | ![Role Management](/role.png) |
-| User Management | ![User Management](/user.png) |
-| Log Management | ![Log Management](/log.png) |
-| Configuration Management | ![Configuration Management](/config.png) |
-| Online Users | ![Online Users](/online.png) |
-| Server Monitoring | ![Server Monitoring](/service.png) |
-| Cache Monitoring | ![Cache Monitoring](/cache.png) |
-| Task Management | ![Task Management](/job.png) |
-| Dictionary Management | ![Dictionary Management](/dict.png) |
-| Interface Management | ![Interface Management](/docs.png) |
-| System Theme | ![System Theme](/theme.png) |
-| Online Documentation | ![Online Documentation](/help.png) |
-| System Lock Screen | ![System Lock Screen](/lock.png) |
-| Form Building | ![Form Building](/form.png) |
 | Code Generation | ![Code Generation](/gencode.png) |
-| Workflow Management | ![Workflow Management](/workflow.png) |
-| File Management | ![File Management](/file.png) |
-| My Applications | ![My Applications](/myapp.png) |
-| Configuration Center | ![Configuration Center](/setting.png) |
 | Intelligent Assistant | ![Intelligent Assistant](/ai.png) |
 
 ### Mobile End
 
-| Module <div style="width:60px"/> | Details | Module <div style="width:60px"/> | Details | Module <div style="width:60px"/> | Details |
-|--------|---------|--------|---------|--------|---------|
-| Login | ![Mobile Login](/app_login.png) | Home | ![Mobile Home](/app_home.png) | Mine | ![Mobile Personal Center](/app_mine.png) |
-| Personal | ![Mobile Personal Information](/app_profile.png) | Settings | ![Mobile Settings](/app_setting.png) | Workbench | ![Mobile Workbench](/app_work.png) |
+| Login <div style="width:60px"/> | Home <div style="width:60px"/> | Profile <div style="width:60px"/> |
+|----------|----------|----------|
+| ![Mobile Login](/app_login.png) | ![Mobile Home](/app_home.png) | ![Mobile Personal Info](/app_mine.png) |
 
 ## 🚀Secondary Development Tutorial
 

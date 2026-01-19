@@ -12,6 +12,8 @@ FastapiAdmin 项目支持多种部署方式，包括：
 - **手动部署**：适用于特殊场景或需要高度定制的情况
 - **云服务部署**：可以部署到阿里云、腾讯云等云服务提供商
 
+本指南将详细介绍 FastapiAdmin 主工程和 FastApp 移动端的部署步骤。
+
 ## 🐳Docker Compose 部署
 
 ### 1. 环境准备
@@ -636,6 +638,218 @@ docker-compose up -d --build
 3. 检查网络连接是否正常
 4. 查看脚本执行日志，了解具体错误信息
 
-## 📄许可协议
+## �FastApp 移动端部署
+
+### 1. H5 部署
+
+#### 1.1 构建 H5 版本
+
+```bash
+# 进入 FastApp 目录
+cd FastApp
+
+# 安装依赖
+pnpm install
+
+# 构建 H5 版本
+pnpm run build:h5
+
+# 构建产物在 dist/build/h5 目录
+```
+
+#### 1.2 部署到服务器
+
+1. 将 `dist/build/h5` 目录复制到 Web 服务器的静态文件目录
+2. 配置 Nginx 支持 SPA 路由：
+
+```nginx
+# /etc/nginx/conf.d/fastapp.conf
+server {
+    listen 80;
+    server_name service.fastapiadmin.com;
+
+    # FastApp H5
+    location /app {
+        alias /path/to/FastApp/dist/build/h5;
+        index index.html;
+        try_files $uri $uri/ /app/index.html;
+    }
+
+    # 其他配置...
+}
+```
+
+3. 重启 Nginx：
+
+```bash
+sudo nginx -t
+sudo systemctl restart nginx
+```
+
+#### 1.3 访问方式
+
+部署完成后，可以通过以下地址访问 FastApp H5 版本：
+- `http://service.fastapiadmin.com/app`
+
+### 2. 微信小程序部署
+
+#### 2.1 构建微信小程序版本
+
+```bash
+# 进入 FastApp 目录
+cd FastApp
+
+# 构建微信小程序版本
+pnpm run build:mp-weixin
+
+# 构建产物在 dist/build/mp-weixin 目录
+```
+
+#### 2.2 发布到微信小程序平台
+
+1. 打开微信开发者工具
+2. 点击「导入项目」
+3. 选择 `dist/build/mp-weixin` 目录
+4. 填写小程序 AppID（如果没有 AppID，可以使用测试号）
+5. 点击「导入」按钮
+6. 等待项目加载完成后，点击「上传」按钮
+7. 填写版本号和更新日志
+8. 点击「上传」按钮
+9. 登录微信公众平台（mp.weixin.qq.com）
+10. 进入「版本管理」页面
+11. 找到刚刚上传的版本，点击「提交审核」
+12. 等待审核通过后，点击「发布」按钮
+
+### 3. 支付宝小程序部署
+
+#### 3.1 构建支付宝小程序版本
+
+```bash
+# 进入 FastApp 目录
+cd FastApp
+
+# 构建支付宝小程序版本
+pnpm run build:mp-alipay
+
+# 构建产物在 dist/build/mp-alipay 目录
+```
+
+#### 3.2 发布到支付宝小程序平台
+
+1. 打开支付宝小程序开发者工具
+2. 点击「导入项目」
+3. 选择 `dist/build/mp-alipay` 目录
+4. 填写小程序 AppID
+5. 点击「导入」按钮
+6. 等待项目加载完成后，点击「上传」按钮
+7. 填写版本号和更新日志
+8. 点击「上传」按钮
+9. 登录支付宝开放平台
+10. 进入「小程序管理」页面
+11. 找到刚刚上传的版本，点击「提交审核」
+12. 等待审核通过后，点击「发布」按钮
+
+### 4. App 部署
+
+#### 4.1 使用 HBuilderX 打包
+
+1. 下载并安装 [HBuilderX](https://www.dcloud.io/hbuilderx.html)
+2. 打开 HBuilderX
+3. 点击「文件」->「导入」->「从本地目录导入」
+4. 选择 FastApp 项目目录
+5. 等待项目加载完成后，点击「发行」->「原生 App-云打包」
+6. 填写 App 名称、版本号等信息
+7. 选择打包平台（Android、iOS 或两者都选）
+8. 配置证书信息（如果没有证书，可以使用测试证书）
+9. 点击「打包」按钮
+10. 等待打包完成后，下载安装包
+
+#### 4.2 发布到应用商店
+
+##### Android 应用商店
+
+1. 登录 [Google Play 开发者控制台](https://play.google.com/console/) 或其他 Android 应用商店
+2. 创建应用
+3. 填写应用信息
+4. 上传 APK 文件
+5. 提交审核
+6. 等待审核通过后，应用会在应用商店上线
+
+##### iOS App Store
+
+1. 登录 [Apple Developer](https://developer.apple.com/) 网站
+2. 进入 App Store Connect
+3. 创建新应用
+4. 填写应用信息
+5. 上传 IPA 文件（需要使用 Xcode 进行签名）
+6. 提交审核
+7. 等待审核通过后，应用会在 App Store 上线
+
+### 5. 部署注意事项
+
+#### 5.1 API 地址配置
+
+在部署 FastApp 之前，需要确保 API 地址配置正确：
+
+```env
+# FastApp/.env.production
+# API 基础地址
+VITE_API_BASE_URL=https://service.fastapiadmin.com
+
+# API 前缀
+VITE_APP_BASE_API=/api
+```
+
+#### 5.2 跨域配置
+
+如果 FastApp 部署在不同的域名下，需要确保后端服务支持跨域请求：
+
+```python
+# FastapiAdmin/backend/app/core/middlewares.py
+from fastapi.middleware.cors import CORSMiddleware
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # 在生产环境中应该设置具体的域名
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+```
+
+#### 5.3 性能优化
+
+- **压缩静态文件**：使用 gzip 压缩静态文件，减少传输大小
+- **启用缓存**：配置浏览器缓存，减少重复请求
+- **使用 CDN**：将静态资源部署到 CDN，提高访问速度
+- **优化图片**：压缩图片大小，使用适当的图片格式
+
+### 6. 常见问题及解决方案
+
+#### 6.1 H5 部署问题
+
+**问题**：H5 页面刷新后显示 404
+**解决方案**：配置 Nginx 支持 SPA 路由，使用 `try_files` 指令
+
+**问题**：H5 页面无法调用 API
+**解决方案**：检查 API 地址配置是否正确，确保后端服务支持跨域请求
+
+#### 6.2 小程序部署问题
+
+**问题**：小程序审核失败
+**解决方案**：根据审核反馈修改代码，确保符合小程序平台的规范
+
+**问题**：小程序无法调用 API
+**解决方案**：在微信公众平台设置合法域名，或在开发者工具中开启「不校验合法域名」选项
+
+#### 6.3 App 部署问题
+
+**问题**：App 打包失败
+**解决方案**：检查证书配置是否正确，确保打包环境网络连接正常
+
+**问题**：App 无法调用 API
+**解决方案**：检查 API 地址配置是否正确，确保网络连接正常
+
+## �📄许可协议
 
 FastapiAdmin 项目采用 MIT 许可协议，详见 [LICENSE](https://github.com/fastapiadmin/FastapiAdmin/blob/master/LICENSE) 文件。
